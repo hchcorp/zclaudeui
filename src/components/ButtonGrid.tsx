@@ -49,6 +49,7 @@ export function ButtonGrid({ buttons, onRun, onEdit, onDelete, onAdd, onReorder,
         <ButtonCard
           key={btn.id}
           button={btn}
+          index={i}
           onRun={() => onRun(btn)}
           onEdit={() => onEdit(btn)}
           onDelete={() => onDelete(btn.id)}
@@ -59,7 +60,11 @@ export function ButtonGrid({ buttons, onRun, onEdit, onDelete, onAdd, onReorder,
           isDragOver={overIdx === i && dragIdx !== i}
         />
       ))}
-      <div className="add-card" onClick={onAdd}>
+      <div
+        className="add-card"
+        style={{ "--add-delay": buttons.length } as React.CSSProperties}
+        onClick={onAdd}
+      >
         <div className="plus">+</div>
         <span>New Action</span>
       </div>

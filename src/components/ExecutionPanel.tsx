@@ -7,17 +7,27 @@ interface Props {
 
 export function ExecutionPanel({ execution }: Props) {
   const [showActivity, setShowActivity] = useState(true);
+  const isDone = execution.status === "done" || execution.status === "error";
 
   return (
     <div className="execution-panel">
       <div className="execution-header">
         <div className="title">
           {execution.status === "running" && <div className="spinner" />}
-          {execution.status === "running" ? `Running: ${execution.buttonName}` : `Completed: ${execution.buttonName}`}
+          {execution.status === "running"
+            ? `Running: ${execution.buttonName}`
+            : execution.status === "error"
+              ? `Failed: ${execution.buttonName}`
+              : `Done: ${execution.buttonName}`}
         </div>
-        {execution.status === "running" && (
-          <button className="stop-btn" onClick={execution.stop}>Stop</button>
-        )}
+        <div className="header-buttons">
+          {execution.status === "running" && (
+            <button className="stop-btn" onClick={execution.stop}>Stop</button>
+          )}
+          {isDone && (
+            <button className="dismiss-btn" onClick={execution.dismiss}>Dismiss</button>
+          )}
+        </div>
       </div>
 
       {execution.result && (

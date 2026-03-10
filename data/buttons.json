@@ -1,20 +1,20 @@
 [
   {
+    "id": "5b38bfa3-738d-4d8a-b180-e32b69d3b569",
+    "name": "Check OpenClaw",
+    "prompt": "Check if openclaw is ok and its gatway",
+    "cwd": "/home/openclaw",
+    "color": "#F59E0B",
+    "icon": "search",
+    "createdAt": "2026-03-10T10:53:07.429Z"
+  },
+  {
     "id": "fix-openclaw",
-    "name": "Fix OpenClaw",
-    "prompt": "check openclaw and fix if needed",
+    "name": "Check and Fix OpenClaw",
+    "prompt": "Check and fix openclaw if needed",
     "cwd": "/home/openclaw",
     "color": "#4F46E5",
     "icon": "wrench",
     "createdAt": "2026-03-10T00:00:00Z"
-  },
-  {
-    "id": "cb630c17-8112-4eea-944a-912f404eaf17",
-    "name": "openclaw status",
-    "prompt": "show me openclaw gateway status",
-    "cwd": "/home/openclaw",
-    "color": "#EF4444",
-    "icon": "rocket",
-    "createdAt": "2026-03-10T10:22:57.643Z"
   }
 ]

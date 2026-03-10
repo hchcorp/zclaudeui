@@ -15,6 +15,7 @@ const ICONS: Record<string, string> = {
 
 interface Props {
   button: ButtonConfig;
+  index: number;
   onRun: () => void;
   onEdit: () => void;
   onDelete: () => void;
@@ -25,11 +26,11 @@ interface Props {
   isDragOver: boolean;
 }
 
-export function ButtonCard({ button, onRun, onEdit, onDelete, isRunning, onDragStart, onDragOver, onDrop, isDragOver }: Props) {
+export function ButtonCard({ button, index, onRun, onEdit, onDelete, isRunning, onDragStart, onDragOver, onDrop, isDragOver }: Props) {
   return (
     <div
       className={`button-card ${isRunning ? "running" : ""} ${isDragOver ? "drag-over" : ""}`}
-      style={{ "--accent-color": button.color } as React.CSSProperties}
+      style={{ "--accent-color": button.color, "--i": index } as React.CSSProperties}
       onClick={onRun}
       draggable
       onDragStart={onDragStart}
@@ -37,24 +38,21 @@ export function ButtonCard({ button, onRun, onEdit, onDelete, isRunning, onDragS
       onDrop={onDrop}
       onDragEnd={(e) => e.currentTarget.classList.remove("dragging")}
     >
-      <style>{`.button-card[style*="${button.color}"]::before { background: ${button.color}; }`}</style>
-      <div className="actions">
+      <div className="actions" onMouseDown={(e) => e.stopPropagation()} draggable={false}>
         <button
           className="action-btn edit-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            onEdit();
-          }}
+          onClick={(e) => { e.stopPropagation(); e.preventDefault(); onEdit(); }}
+          onMouseDown={(e) => e.stopPropagation()}
+          draggable={false}
           title="Edit"
         >
           ✎
         </button>
         <button
           className="action-btn delete-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete();
-          }}
+          onClick={(e) => { e.stopPropagation(); e.preventDefault(); onDelete(); }}
+          onMouseDown={(e) => e.stopPropagation()}
+          draggable={false}
           title="Delete"
         >
           ✕
