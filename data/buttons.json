@@ -1,0 +1,11 @@
+[
+  {
+    "id": "fix-openclaw",
+    "name": "Fix OpenClaw",
+    "prompt": "check openclaw and fix if needed",
+    "cwd": "/home/openclaw",
+    "color": "#4F46E5",
+    "icon": "wrench",
+    "createdAt": "2026-03-10T00:00:00Z"
+  }
+]
