@@ -133,6 +133,17 @@ body {
   box-shadow: 0 0 20px rgba(79, 70, 229, 0.15);
 }
 
+.button-card.dragging {
+  opacity: 0.4;
+  transform: scale(0.95);
+}
+
+.button-card.drag-over {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+  transform: scale(1.02);
+}
+
 .button-card .icon {
   font-size: 24px;
   margin-bottom: 12px;

@@ -55,11 +55,6 @@ export function CreateButtonModal({ onClose, onSave, editButton }: Props) {
         </div>
 
         <div className="field">
-          <label>Working Directory</label>
-          <input value={cwd} onChange={(e) => setCwd(e.target.value)} />
-        </div>
-
-        <div className="field">
           <label>Color</label>
           <div className="color-picker">
             {COLORS.map((c) => (

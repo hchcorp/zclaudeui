@@ -81,6 +81,15 @@ export default function App() {
     setButtons((prev) => prev.filter((b) => b.id !== id));
   };
 
+  const handleReorder = async (reordered: ButtonConfig[]) => {
+    setButtons(reordered);
+    await fetch("/api/buttons", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order: reordered.map((b) => b.id) }),
+    });
+  };
+
   const closeModal = () => {
     setModalMode("closed");
     setEditTarget(null);
@@ -89,7 +98,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="header">
-        <h1>Zak-UI</h1>
+        <h1>Mada Faka</h1>
         <div className="header-actions">
           <button
             className="theme-toggle"
@@ -107,6 +116,7 @@ export default function App() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onAdd={() => setModalMode("create")}
+        onReorder={handleReorder}
         runningId={execution.runningButtonId}
       />
 

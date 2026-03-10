@@ -57,6 +57,20 @@ buttonsRouter.put("/:id", (req, res) => {
   res.json(buttons[idx]);
 });
 
+buttonsRouter.put("/", (req, res) => {
+  const ids: string[] = req.body.order;
+  if (!Array.isArray(ids)) return res.status(400).json({ error: "order must be an array" });
+  const buttons = readButtons();
+  const map = new Map(buttons.map((b) => [b.id, b]));
+  const reordered = ids.map((id) => map.get(id)).filter(Boolean) as ButtonConfig[];
+  // Append any buttons not in the order array (safety)
+  for (const b of buttons) {
+    if (!ids.includes(b.id)) reordered.push(b);
+  }
+  writeButtons(reordered);
+  res.json(reordered);
+});
+
 buttonsRouter.delete("/:id", (req, res) => {
   let buttons = readButtons();
   buttons = buttons.filter((b) => b.id !== req.params.id);

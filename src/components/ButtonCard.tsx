@@ -19,14 +19,23 @@ interface Props {
   onEdit: () => void;
   onDelete: () => void;
   isRunning: boolean;
+  onDragStart: (e: React.DragEvent) => void;
+  onDragOver: (e: React.DragEvent) => void;
+  onDrop: (e: React.DragEvent) => void;
+  isDragOver: boolean;
 }
 
-export function ButtonCard({ button, onRun, onEdit, onDelete, isRunning }: Props) {
+export function ButtonCard({ button, onRun, onEdit, onDelete, isRunning, onDragStart, onDragOver, onDrop, isDragOver }: Props) {
   return (
     <div
-      className={`button-card ${isRunning ? "running" : ""}`}
+      className={`button-card ${isRunning ? "running" : ""} ${isDragOver ? "drag-over" : ""}`}
       style={{ "--accent-color": button.color } as React.CSSProperties}
       onClick={onRun}
+      draggable
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      onDragEnd={(e) => e.currentTarget.classList.remove("dragging")}
     >
       <style>{`.button-card[style*="${button.color}"]::before { background: ${button.color}; }`}</style>
       <div className="actions">
