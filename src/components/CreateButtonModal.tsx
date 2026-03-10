@@ -21,25 +21,28 @@ const ICONS = [
 
 interface Props {
   onClose: () => void;
-  onCreate: (data: Omit<ButtonConfig, "id" | "createdAt">) => void;
+  onSave: (data: Omit<ButtonConfig, "id" | "createdAt">) => void;
+  editButton?: ButtonConfig | null;
 }
 
-export function CreateButtonModal({ onClose, onCreate }: Props) {
-  const [name, setName] = useState("");
-  const [prompt, setPrompt] = useState("");
-  const [cwd, setCwd] = useState("/home/openclaw");
-  const [color, setColor] = useState(COLORS[0]);
-  const [icon, setIcon] = useState("play");
+export function CreateButtonModal({ onClose, onSave, editButton }: Props) {
+  const [name, setName] = useState(editButton?.name || "");
+  const [prompt, setPrompt] = useState(editButton?.prompt || "");
+  const [cwd, setCwd] = useState(editButton?.cwd || "/home/openclaw");
+  const [color, setColor] = useState(editButton?.color || COLORS[0]);
+  const [icon, setIcon] = useState(editButton?.icon || "play");
 
   const handleSubmit = () => {
     if (!name.trim() || !prompt.trim()) return;
-    onCreate({ name: name.trim(), prompt: prompt.trim(), cwd, color, icon });
+    onSave({ name: name.trim(), prompt: prompt.trim(), cwd, color, icon });
   };
+
+  const isEdit = !!editButton;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <h2>New Action Button</h2>
+        <h2>{isEdit ? "Edit Action Button" : "New Action Button"}</h2>
 
         <div className="field">
           <label>Name</label>
@@ -88,7 +91,9 @@ export function CreateButtonModal({ onClose, onCreate }: Props) {
 
         <div className="modal-actions">
           <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={handleSubmit} disabled={!name.trim() || !prompt.trim()}>Create</button>
+          <button className="btn btn-primary" onClick={handleSubmit} disabled={!name.trim() || !prompt.trim()}>
+            {isEdit ? "Save" : "Create"}
+          </button>
         </div>
       </div>
     </div>

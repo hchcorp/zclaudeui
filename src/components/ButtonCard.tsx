@@ -16,11 +16,12 @@ const ICONS: Record<string, string> = {
 interface Props {
   button: ButtonConfig;
   onRun: () => void;
+  onEdit: () => void;
   onDelete: () => void;
   isRunning: boolean;
 }
 
-export function ButtonCard({ button, onRun, onDelete, isRunning }: Props) {
+export function ButtonCard({ button, onRun, onEdit, onDelete, isRunning }: Props) {
   return (
     <div
       className={`button-card ${isRunning ? "running" : ""}`}
@@ -30,11 +31,22 @@ export function ButtonCard({ button, onRun, onDelete, isRunning }: Props) {
       <style>{`.button-card[style*="${button.color}"]::before { background: ${button.color}; }`}</style>
       <div className="actions">
         <button
-          className="delete-btn"
+          className="action-btn edit-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit();
+          }}
+          title="Edit"
+        >
+          ✎
+        </button>
+        <button
+          className="action-btn delete-btn"
           onClick={(e) => {
             e.stopPropagation();
             onDelete();
           }}
+          title="Delete"
         >
           ✕
         </button>

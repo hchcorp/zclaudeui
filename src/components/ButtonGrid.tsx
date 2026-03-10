@@ -4,12 +4,13 @@ import { ButtonCard } from "./ButtonCard";
 interface Props {
   buttons: ButtonConfig[];
   onRun: (button: ButtonConfig) => void;
+  onEdit: (button: ButtonConfig) => void;
   onDelete: (id: string) => void;
   onAdd: () => void;
   runningId: string | null;
 }
 
-export function ButtonGrid({ buttons, onRun, onDelete, onAdd, runningId }: Props) {
+export function ButtonGrid({ buttons, onRun, onEdit, onDelete, onAdd, runningId }: Props) {
   return (
     <div className="button-grid">
       {buttons.map((btn) => (
@@ -17,6 +18,7 @@ export function ButtonGrid({ buttons, onRun, onDelete, onAdd, runningId }: Props
           key={btn.id}
           button={btn}
           onRun={() => onRun(btn)}
+          onEdit={() => onEdit(btn)}
           onDelete={() => onDelete(btn.id)}
           isRunning={runningId === btn.id}
         />

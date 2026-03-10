@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { ButtonGrid } from "./components/ButtonGrid";
 import { CreateButtonModal } from "./components/CreateButtonModal";
 import { ExecutionPanel } from "./components/ExecutionPanel";
@@ -14,11 +14,24 @@ export interface ButtonConfig {
   createdAt: string;
 }
 
+function getInitialTheme(): "dark" | "light" {
+  const saved = localStorage.getItem("zak-ui-theme");
+  if (saved === "light" || saved === "dark") return saved;
+  return "dark";
+}
+
 export default function App() {
   const [buttons, setButtons] = useState<ButtonConfig[]>([]);
-  const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState<"closed" | "create" | "edit">("closed");
+  const [editTarget, setEditTarget] = useState<ButtonConfig | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">(getInitialTheme);
   const execution = useExecution();
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("zak-ui-theme", theme);
+  }, [theme]);
 
   const loadButtons = useCallback(async () => {
     const res = await fetch("/api/buttons");
@@ -42,7 +55,25 @@ export default function App() {
     });
     const newButton = await res.json();
     setButtons((prev) => [...prev, newButton]);
-    setShowModal(false);
+    setModalMode("closed");
+  };
+
+  const handleEdit = (button: ButtonConfig) => {
+    setEditTarget(button);
+    setModalMode("edit");
+  };
+
+  const handleUpdate = async (data: Omit<ButtonConfig, "id" | "createdAt">) => {
+    if (!editTarget) return;
+    const res = await fetch(`/api/buttons/${editTarget.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const updated = await res.json();
+    setButtons((prev) => prev.map((b) => (b.id === updated.id ? updated : b)));
+    setModalMode("closed");
+    setEditTarget(null);
   };
 
   const handleDelete = async (id: string) => {
@@ -50,26 +81,42 @@ export default function App() {
     setButtons((prev) => prev.filter((b) => b.id !== id));
   };
 
+  const closeModal = () => {
+    setModalMode("closed");
+    setEditTarget(null);
+  };
+
   return (
     <div className="app">
       <header className="header">
         <h1>Zak-UI</h1>
+        <div className="header-actions">
+          <button
+            className="theme-toggle"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            {theme === "dark" ? "\u2600\uFE0F" : "\u{1F319}"}
+          </button>
+        </div>
       </header>
 
       <ButtonGrid
         buttons={buttons}
         onRun={handleRun}
+        onEdit={handleEdit}
         onDelete={handleDelete}
-        onAdd={() => setShowModal(true)}
+        onAdd={() => setModalMode("create")}
         runningId={execution.runningButtonId}
       />
 
       {execution.isActive && <ExecutionPanel execution={execution} />}
 
-      {showModal && (
+      {modalMode !== "closed" && (
         <CreateButtonModal
-          onClose={() => setShowModal(false)}
-          onCreate={handleCreate}
+          onClose={closeModal}
+          onSave={modalMode === "edit" ? handleUpdate : handleCreate}
+          editButton={modalMode === "edit" ? editTarget : null}
         />
       )}
     </div>
